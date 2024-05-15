@@ -169,7 +169,7 @@ class NodePackageManager
     }
 
     /**
-     * Install the changes to the "package.json" file.
+     * Commit the changes to the "package.json" file.
      */
     public function commit(): void
     {
