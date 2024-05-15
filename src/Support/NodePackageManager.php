@@ -11,7 +11,7 @@ class NodePackageManager
     /**
      * The package manager type.
      */
-    protected NodePackageManagerType $type = NodePackageManagerType::yarn;
+    protected ?NodePackageManagerType $type = null;
 
     /**
      * The number of spaces for indentation.
@@ -264,7 +264,7 @@ class NodePackageManager
         $type = $this->guessManagerType();
 
         if ($type === NodePackageManagerType::yarn) {
-            $command = 'yarn';
+            $command = 'yarn install';
         } elseif ($type === NodePackageManagerType::pnpm) {
             $command = 'pnpm install';
         } else {
@@ -333,7 +333,9 @@ class NodePackageManager
      */
     protected function guessManagerType(): NodePackageManagerType
     {
-        if (file_exists($this->workingPath.'/package-lock.json')) {
+        if ($this->type) {
+            return $this->type;
+        } elseif (file_exists($this->workingPath.'/package-lock.json')) {
             return NodePackageManagerType::npm;
         } elseif (file_exists($this->workingPath.'/yarn.lock')) {
             return NodePackageManagerType::yarn;
@@ -341,6 +343,6 @@ class NodePackageManager
             return NodePackageManagerType::pnpm;
         }
 
-        return $this->type;
+        return NodePackageManagerType::yarn;
     }
 }

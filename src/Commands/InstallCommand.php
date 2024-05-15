@@ -78,7 +78,6 @@ class InstallCommand extends Command
         $this->installVue();
         $this->installInertiaVue();
         $this->installTailwindCss();
-
         $this->installNodeDependencies();
 
         $this->components->info('Inertia.js application ready.  You can start your local development using:');
@@ -552,8 +551,17 @@ class InstallCommand extends Command
     {
         $npm = new NodePackageManager($workingPath);
 
+        if ($this->option('npm')) {
+            $npm->useNpm();
+        } elseif ($this->option('yarn')) {
+            $npm->useYarn();
+        } elseif ($this->option('pnpm')) {
+            $npm->usePnpm();
+        }
+
         $npm->runningProcessWith(function ($command) use ($workingPath) {
             Process::path($workingPath)
+                ->timeout(10 * 60) // 10 minutes
                 ->run($command, function (string $type, string $output) {
                     $this->output->write($output);
                 });
