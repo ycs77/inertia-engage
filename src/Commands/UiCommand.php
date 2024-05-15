@@ -29,18 +29,18 @@ class UiCommand extends Command
      */
     protected array $resources = [
         'error' => [
-            'error-vue/Error.vue' => 'resources/js/pages/Error.vue',
+            'error/Error.vue' => 'resources/js/pages/Error.vue',
         ],
         'error-ts' => [
-            'error-vue-ts/Error.vue' => 'resources/js/pages/Error.vue',
+            'error/Error-ts.vue' => 'resources/js/pages/Error.vue',
         ],
         'pagination' => [
-            'pagination-vue/Pagination.vue' => 'resources/js/components/Pagination.vue',
-            'pagination-css/pagination.css' => 'resources/css/pagination.css',
+            'pagination/Pagination.vue' => 'resources/js/components/Pagination.vue',
+            'pagination/pagination.css' => 'resources/css/pagination.css',
         ],
         'pagination-ts' => [
-            'pagination-vue-ts/Pagination.vue' => 'resources/js/components/Pagination.vue',
-            'pagination-css/pagination.css' => 'resources/css/pagination.css',
+            'pagination/Pagination-ts.vue' => 'resources/js/components/Pagination.vue',
+            'pagination/pagination.css' => 'resources/css/pagination.css',
         ],
     ];
 

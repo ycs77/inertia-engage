@@ -38,7 +38,7 @@ Then install the Inertia.js scaffold into this app:
 
 ```bash
 php artisan inertia:install
-# scaffolded with TypeScript support
+# or export with TypeScript
 php artisan inertia:install --ts
 ```
 
@@ -48,7 +48,7 @@ Publish the error page:
 
 ```bash
 php artisan inertia:ui error
-# or TS
+# or export with TypeScript
 php artisan inertia:ui error --ts
 ```
 
@@ -76,7 +76,7 @@ Publish pagination component and css file:
 
 ```bash
 php artisan inertia:ui pagination
-# or TS
+# or export with TypeScript
 php artisan inertia:ui pagination --ts
 ```
 
