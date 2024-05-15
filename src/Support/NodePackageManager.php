@@ -34,6 +34,11 @@ class NodePackageManager
     protected array $pendingRemovals = [];
 
     /**
+     * The packages that should be added to the "package.json" file as scripts.
+     */
+    protected array $pendingScripts = [];
+
+    /**
      * @var callable|null
      */
     protected $runningProcessWithCallback;
@@ -81,6 +86,18 @@ class NodePackageManager
     public function remove(string $package)
     {
         $this->pendingRemovals[] = $package;
+
+        return $this;
+    }
+
+    /**
+     * Add the given script to the "package.json" file.
+     *
+     * @return $this
+     */
+    public function script(string $name, string $command)
+    {
+        $this->pendingScripts[$name] = $command;
 
         return $this;
     }
@@ -168,6 +185,10 @@ class NodePackageManager
 
             foreach ($this->pendingDevAdditions as $package => $version) {
                 $packageJson['devDependencies'][$package] = $version;
+            }
+
+            foreach ($this->pendingScripts as $name => $command) {
+                $packageJson['scripts'][$name] = $command;
             }
 
             return $packageJson;

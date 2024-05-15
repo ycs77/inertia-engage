@@ -19,6 +19,7 @@ class InstallCommand extends Command
                             {--npm : Use npm as the package manager}
                             {--yarn : Use yarn as the package manager}
                             {--pnpm : Use pnpm as the package manager}
+                            {--ts : Scaffolded with TypeScript support}
                             {--force : Overwrite existing files by default}';
 
     /**
@@ -39,11 +40,18 @@ class InstallCommand extends Command
     protected NodePackageManager $npm;
 
     /**
+     * The javascript file extension.
+     */
+    protected string $js = 'js';
+
+    /**
      * Execute the console command.
      */
     public function handle(): void
     {
         $cwd = getcwd();
+
+        $this->js = $this->option('ts') ? 'ts' : 'js';
 
         $this->composer = new Composer(new Filesystem(), $cwd);
 
@@ -66,6 +74,7 @@ class InstallCommand extends Command
 
         $this->components->info('Inertia.js laravel installs successfully.');
 
+        $this->installTypescript();
         $this->installVue();
         $this->installInertiaVue();
         $this->installTailwindCss();
@@ -156,9 +165,15 @@ class InstallCommand extends Command
      */
     protected function publishViteConfig(): void
     {
+        $js = $this->js;
+
+        if ($this->option('ts') && file_exists(base_path('vite.config.js'))) {
+            @unlink(base_path('vite.config.js'));
+        }
+
         copy(
             __DIR__.'/../../stubs/initialize/vite.config.js',
-            base_path('vite.config.js')
+            base_path("vite.config.$js")
         );
 
         $this->components->info('Published vite config');
@@ -169,11 +184,23 @@ class InstallCommand extends Command
      */
     protected function clearDefaultJsFiles(): void
     {
-        file_put_contents(resource_path('js/app.js'), '');
+        if (file_exists(resource_path('js/app.js'))) {
+            $js = 'js';
+        } elseif (file_exists(resource_path('js/app.ts'))) {
+            $js = 'ts';
+        } else {
+            return;
+        }
 
-        @unlink(resource_path('js/bootstrap.js'));
+        $appJs = trim(file_get_contents(resource_path("js/app.$js")));
 
-        $this->components->info('Cleared default js files');
+        if (str_contains($appJs, "import './bootstrap';")) {
+            file_put_contents(resource_path("js/app.$js"), '');
+
+            @unlink(resource_path('js/bootstrap.js'));
+
+            $this->components->info('Cleared default js files');
+        }
     }
 
     /**
@@ -304,6 +331,49 @@ class InstallCommand extends Command
     }
 
     /**
+     * Install the TypeScript package.
+     */
+    protected function installTypescript(): void
+    {
+        if (! $this->option('ts')) {
+            return;
+        }
+
+        $this->info('    Installing typescript');
+
+        $this->npm->addDev('typescript', '~5.4.0');
+        $this->npm->addDev('@types/node', '^20.0.0');
+
+        if (! $this->option('force') && file_exists(base_path('tsconfig.json'))) {
+            if (! $this->components->confirm('The [tsconfig.json] file already exists. Do you want to replace it?')) {
+                return;
+            }
+        }
+
+        copy(
+            __DIR__.'/../../stubs/typescript/tsconfig.json',
+            base_path('tsconfig.json')
+        );
+
+        if (! $this->option('force') && file_exists(resource_path('js/shims/env.d.ts'))) {
+            if (! $this->components->confirm('The [resources/js/shims/env.d.ts] file already exists. Do you want to replace it?')) {
+                return;
+            }
+        }
+
+        if (! is_dir($directory = resource_path('js/shims'))) {
+            mkdir($directory, 0755, true);
+        }
+
+        copy(
+            __DIR__.'/../../stubs/typescript/shims/env.d.ts',
+            resource_path('js/shims/env.d.ts')
+        );
+
+        $this->components->info('Installed typescript successfully.');
+    }
+
+    /**
      * Install the Vue package.
      */
     protected function installVue(): void
@@ -313,23 +383,24 @@ class InstallCommand extends Command
         $this->npm->addDev('vue', '^3.4.0');
         $this->npm->addDev('@vitejs/plugin-vue', '^5.0.0');
 
+        $js = $this->js;
+
         // update vite.config.js
-        $viteConfig = file_get_contents(base_path('vite.config.js'));
+        if (! $this->option('force') && file_exists(base_path("vite.config.$js"))) {
+            if (! $this->components->confirm("The [vite.config.$js] file already exists. Do you want to replace it?")) {
+                return;
+            }
+        }
 
-        if (! str_contains($viteConfig, 'import Vue from \'@vitejs/plugin-vue\'')) {
-            $viteConfig = str_replace(
-                'import Laravel from \'laravel-vite-plugin\'',
-                "import Laravel from 'laravel-vite-plugin'\nimport Vue from '@vitejs/plugin-vue'",
-                $viteConfig
-            );
+        copy(
+            __DIR__.'/../../stubs/vue/vite.config.js',
+            base_path("vite.config.$js")
+        );
 
-            $viteConfig = preg_replace(
-                '/(refresh: true,\n +}\),)/',
-                "$1\n    Vue({\n      template: {\n        transformAssetUrls: {\n          base: null,\n          includeAbsolute: false,\n        },\n      },\n    }),",
-                $viteConfig
-            );
-
-            file_put_contents(base_path('vite.config.js'), $viteConfig);
+        // install vue-tsc
+        if ($this->option('ts')) {
+            $this->npm->addDev('vue-tsc', '^2.0.17');
+            $this->npm->script('type-check', 'vue-tsc --build --force');
         }
 
         $this->components->info('Installed vue successfully.');
@@ -344,15 +415,49 @@ class InstallCommand extends Command
 
         $this->npm->addDev('@inertiajs/vue3', '^1.0.15');
 
+        $js = $this->js;
+
         // copy app.js
+        if (! $this->option('force') && file_exists(resource_path("js/app.$js"))) {
+            if (! $this->components->confirm("The [resources/js/app.$js] file already exists. Do you want to replace it?")) {
+                return;
+            }
+        }
+
+        if ($this->option('ts') && file_exists(resource_path('js/app.js'))) {
+            @unlink(resource_path('js/app.js'));
+        }
+
         copy(
-            __DIR__.'/../../stubs/vue/app.js',
-            resource_path('js/app.js')
+            __DIR__."/../../stubs/vue/app.$js",
+            resource_path("js/app.$js")
         );
+
+        if ($this->option('ts')) {
+            // update app.js path in vite.config.js
+            file_put_contents(base_path('vite.config.ts'), str_replace(
+                "'resources/js/app.js'",
+                "'resources/js/app.ts'",
+                file_get_contents(base_path('vite.config.ts'))
+            ));
+
+            // update app.js path in app layout
+            file_put_contents(resource_path('views/app.blade.php'), str_replace(
+                "'resources/js/app.js'",
+                "'resources/js/app.ts'",
+                file_get_contents(resource_path('views/app.blade.php'))
+            ));
+        }
 
         // copy pages
         if (! is_dir($directory = resource_path('js/pages'))) {
             mkdir($directory, 0755, true);
+        }
+
+        if (! $this->option('force') && file_exists(resource_path('js/pages/Home.vue'))) {
+            if (! $this->components->confirm('The [resources/js/pages/Home.vue] file already exists. Do you want to replace it?')) {
+                return;
+            }
         }
 
         copy(
@@ -375,32 +480,38 @@ class InstallCommand extends Command
         $this->npm->addDev('postcss-import', '^16.0.0');
         $this->npm->addDev('autoprefixer', '^10.0.0');
 
-        if (! $this->option('force') && file_exists(base_path('tailwind.config.js'))) {
-            if (! $this->components->confirm('The [tailwind.config.js] file already exists. Do you want to replace it?')) {
+        $js = $this->js;
+
+        // copy tailwind.config.js
+        if (! $this->option('force') && file_exists(base_path("tailwind.config.$js"))) {
+            if (! $this->components->confirm("The [tailwind.config.$js] file already exists. Do you want to replace it?")) {
                 return;
             }
         }
 
-        // copy tailwind.config.js
+        if ($this->option('ts') && file_exists(base_path('tailwind.config.js'))) {
+            @unlink(base_path('tailwind.config.js'));
+        }
+
         copy(
-            __DIR__.'/../../stubs/tailwindcss/tailwind.config.js',
-            base_path('tailwind.config.js')
+            __DIR__."/../../stubs/tailwindcss/tailwind.config.$js",
+            base_path("tailwind.config.$js")
         );
 
+        // copy postcss.config.js
         if (! $this->option('force') && file_exists(base_path('postcss.config.js'))) {
             if (! $this->components->confirm('The [postcss.config.js] file already exists. Do you want to replace it?')) {
                 return;
             }
         }
 
-        // copy postcss.config.js
         copy(
             __DIR__.'/../../stubs/tailwindcss/postcss.config.js',
             base_path('postcss.config.js')
         );
 
         // import css in app.js
-        $appJs = file_get_contents(resource_path('js/app.js'));
+        $appJs = file_get_contents(resource_path("js/app.$js"));
 
         if (! str_contains($appJs, 'import \'./index.css\';')) {
             $appJs = str_replace(
@@ -409,7 +520,7 @@ class InstallCommand extends Command
                 $appJs
             );
 
-            file_put_contents(resource_path('js/app.js'), $appJs);
+            file_put_contents(resource_path("js/app.$js"), $appJs);
         }
 
         // remove empty app.css file

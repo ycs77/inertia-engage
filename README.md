@@ -38,6 +38,8 @@ Then install the Inertia.js scaffold into this app:
 
 ```bash
 php artisan inertia:install
+# scaffolded with TypeScript support
+php artisan inertia:install --ts
 ```
 
 ## Error Handler
