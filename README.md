@@ -94,9 +94,9 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/ycs77/inertia-engage?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square
-[ico-style-ci]: https://github.styleci.io/repos/444753402/shield?style=flat-square
+[ico-style-ci]: https://github.styleci.io/repos/800696246/shield?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/ycs77/inertia-engage?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/ycs77/inertia-engage
-[link-style-ci]: https://github.styleci.io/repos/444753402
+[link-style-ci]: https://github.styleci.io/repos/800696246
 [link-downloads]: https://packagist.org/packages/ycs77/inertia-engage
