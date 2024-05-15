@@ -1,0 +1,6 @@
+preset: laravel
+
+finder:
+  not-name:
+    - "_ide_helpers.php"
+    - "_ide_helpers.stub"
