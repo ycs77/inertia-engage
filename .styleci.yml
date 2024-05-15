@@ -1,6 +1,8 @@
 preset: laravel
 
 finder:
+  exclude:
+    - "stubs"
   not-name:
     - "_ide_helpers.php"
     - "_ide_helpers.stub"

@@ -5,6 +5,7 @@ namespace Inertia;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Commands\IdeHelperCommand;
+use Inertia\Commands\InstallCommand;
 use Inertia\Commands\UiCommand;
 use Inertia\Exceptions\Handler as ExceptionHandler;
 use Inertia\Pagination\Paginator;
@@ -43,6 +44,7 @@ class EngageServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 IdeHelperCommand::class,
+                InstallCommand::class,
                 UiCommand::class,
             ]);
         }

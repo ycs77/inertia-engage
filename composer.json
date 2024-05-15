@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=8.2",
+        "ergebnis/json-printer": ">=3.5",
         "inertiajs/inertia-laravel": ">=1.0.0",
         "laravel/framework": ">=11.0"
     },

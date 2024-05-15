@@ -34,6 +34,12 @@ Publish the config file is optional:
 php artisan vendor:publish --tag=inertia-engage-config
 ```
 
+Then install the Inertia.js scaffold into this app:
+
+```bash
+php artisan inertia:install
+```
+
 ## Error Handler
 
 Publish the error page:
