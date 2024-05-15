@@ -5,7 +5,7 @@
 [![Style CI Build Status][ico-style-ci]][link-style-ci]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended your app.
+Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended your Inertia.js application.
 
 **Features:**
 

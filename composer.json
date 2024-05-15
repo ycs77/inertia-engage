@@ -1,6 +1,6 @@
 {
     "name": "ycs77/inertia-engage",
-    "description": "Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended your app.",
+    "description": "Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended your Inertia.js application.",
     "keywords": ["laravel", "inertia"],
     "homepage": "https://github.com/ycs77/inertia-engage",
     "license": "MIT",
