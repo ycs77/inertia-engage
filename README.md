@@ -7,7 +7,7 @@
 
 Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended your app.
 
-Features:
+**Features:**
 
 <!-- no toc -->
 * [Error Handler](#error-handler)
@@ -34,7 +34,7 @@ Publish the config file is optional:
 php artisan vendor:publish --tag=inertia-engage-config
 ```
 
-Then install the Inertia.js scaffold into this app:
+Then install the Inertia.js scaffold into this application:
 
 ```bash
 php artisan inertia:install
@@ -52,7 +52,7 @@ php artisan inertia:ui error
 php artisan inertia:ui error --ts
 ```
 
-Then extends the exception handler for Inertia app:
+Then extends the exception handler for Inertia application:
 
 *bootstrap/providers.php.php*
 ```php
