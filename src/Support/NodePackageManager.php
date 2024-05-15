@@ -289,8 +289,6 @@ class NodePackageManager
 
     /**
      * Sort the dependencies in the "package.json" file.
-     *
-     * @return array
      */
     protected function sortDependencies(array $packageJson): array
     {

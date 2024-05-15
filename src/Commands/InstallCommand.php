@@ -184,7 +184,7 @@ class InstallCommand extends Command
         $this->info('    Installing inertia/laravel package');
 
         $this->runProcessCommand(
-            $this->findComposer() . ' require inertiajs/inertia-laravel',
+            $this->findComposer().' require inertiajs/inertia-laravel',
             workingPath: base_path()
         );
 
@@ -234,7 +234,7 @@ class InstallCommand extends Command
         // import middleware class
         if (! str_contains($bootatrapApp, 'use App\\Http\\Middleware\\HandleInertiaRequests;')) {
             $bootatrapApp = str_replace(
-                "use Illuminate\\Foundation\\Application;",
+                'use Illuminate\\Foundation\\Application;',
                 "use App\\Http\\Middleware\\HandleInertiaRequests;\nuse Illuminate\\Foundation\\Application;",
                 $bootatrapApp
             );
@@ -267,7 +267,7 @@ class InstallCommand extends Command
 
         // import classes
         $bootatrapApp = str_replace(
-            "use Illuminate\\Foundation\\Configuration\\Middleware;",
+            'use Illuminate\\Foundation\\Configuration\\Middleware;',
             "use Illuminate\\Foundation\\Configuration\\Middleware;\nuse Illuminate\\Http\\Request;\nuse Inertia\\Inertia;\nuse Symfony\\Component\\HttpFoundation\\Response;",
             $bootatrapApp
         );
@@ -290,7 +290,7 @@ class InstallCommand extends Command
     protected function publishInertiaAppLayout(): void
     {
         if (! $this->option('force') && file_exists(resource_path('views/app.blade.php'))) {
-            if (! $this->components->confirm("The [resources/views/app.blade.php] file already exists. Do you want to replace it?")) {
+            if (! $this->components->confirm('The [resources/views/app.blade.php] file already exists. Do you want to replace it?')) {
                 return;
             }
         }
@@ -376,7 +376,7 @@ class InstallCommand extends Command
         $this->npm->addDev('autoprefixer', '^10.0.0');
 
         if (! $this->option('force') && file_exists(base_path('tailwind.config.js'))) {
-            if (! $this->components->confirm("The [tailwind.config.js] file already exists. Do you want to replace it?")) {
+            if (! $this->components->confirm('The [tailwind.config.js] file already exists. Do you want to replace it?')) {
                 return;
             }
         }
@@ -388,7 +388,7 @@ class InstallCommand extends Command
         );
 
         if (! $this->option('force') && file_exists(base_path('postcss.config.js'))) {
-            if (! $this->components->confirm("The [postcss.config.js] file already exists. Do you want to replace it?")) {
+            if (! $this->components->confirm('The [postcss.config.js] file already exists. Do you want to replace it?')) {
                 return;
             }
         }
@@ -415,7 +415,7 @@ class InstallCommand extends Command
         // remove empty app.css file
         if (file_exists(resource_path('css/app.css'))) {
             if (file_get_contents(resource_path('css/app.css'))) {
-                if ($this->components->confirm("The [resources/css/app.css] file already exists. Do you want to remove it?")) {
+                if ($this->components->confirm('The [resources/css/app.css] file already exists. Do you want to remove it?')) {
                     @unlink(resource_path('css/app.css'));
                 }
             } else {

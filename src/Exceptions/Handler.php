@@ -35,7 +35,6 @@ class Handler
     /**
      * Create a new inertia exception handler instance.
      *
-     * @param  \Inertia\ResponseFactory  $inertia
      * @return void
      */
     public function __construct(protected ResponseFactory $inertia)
@@ -45,11 +44,6 @@ class Handler
 
     /**
      * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Symfony\Component\HttpFoundation\Response  $response
-     * @param  \Throwable  $e
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, SymfonyResponse $response, Throwable $e): SymfonyResponse
     {
@@ -126,7 +120,6 @@ class Handler
     /**
      * Regsiter the messages transform callback.
      *
-     * @param  callable  $callback
      * @return $this
      */
     public function withMessages(callable $callback)
@@ -154,10 +147,6 @@ class Handler
 
     /**
      * Transform the inertia error response.
-     *
-     * @param  \Inertia\Response  $response
-     * @param  array  $params
-     * @return \Inertia\Response
      */
     protected function transformInertiaErrorResponse(InertiaResponse $response, array $params = []): InertiaResponse
     {
