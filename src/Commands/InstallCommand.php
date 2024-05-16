@@ -239,11 +239,11 @@ class InstallCommand extends Command
     }
 
     /**
-     * Install the "inertia/laravel" package.
+     * Install the "inertiajs/inertia-laravel" package.
      */
     protected function installInertiaLaravel(): void
     {
-        $this->info('    Installing inertia/laravel package');
+        $this->info('    Installing inertiajs/inertia-laravel package');
 
         $this->runProcessCommand(
             $this->findComposer().' require inertiajs/inertia-laravel',
