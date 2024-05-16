@@ -350,6 +350,8 @@ class InstallCommand extends Command
             resource_path('views/app.blade.php')
         );
 
+        @unlink(resource_path('views/welcome.blade.php'));
+
         $this->components->info('Published inertia app layout');
     }
 
