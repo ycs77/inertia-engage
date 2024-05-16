@@ -1,0 +1,18 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/js/*"]
+    }
+  },
+  "include": [
+    "resources/js/shims/env.d.ts",
+    "resources/js/shims/components.d.ts",
+    "resources/js/shims/auto-imports.d.ts",
+    "resources/js/**/*",
+    "resources/js/**/*.vue"
+  ]
+}

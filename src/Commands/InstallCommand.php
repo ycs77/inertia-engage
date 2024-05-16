@@ -386,17 +386,27 @@ class InstallCommand extends Command
 
         $this->npm->addDev('typescript', '~5.4.0');
         $this->npm->addDev('@types/node', '^20.0.0');
+        $this->npm->addDev('@tsconfig/node20', '^20.0.0');
+        $this->npm->addDev('@vue/tsconfig', '^0.5.1');
 
-        if (! $this->option('force') && file_exists(base_path('tsconfig.json'))) {
-            if (! $this->components->confirm('The [tsconfig.json] file already exists. Do you want to replace it?')) {
-                return;
+        $tsconfigs = [
+            'tsconfig.json',
+            'tsconfig.app.json',
+            'tsconfig.node.json',
+        ];
+
+        foreach ($tsconfigs as $tsconfig) {
+            if (! $this->option('force') && file_exists(base_path($tsconfig))) {
+                if (! $this->components->confirm("The [$tsconfig] file already exists. Do you want to replace it?")) {
+                    return;
+                }
             }
-        }
 
-        copy(
-            __DIR__.'/../../stubs/typescript/tsconfig.json',
-            base_path('tsconfig.json')
-        );
+            copy(
+                __DIR__."/../../stubs/typescript/$tsconfig",
+                base_path($tsconfig)
+            );
+        }
 
         if (! $this->option('force') && file_exists(resource_path('js/shims/env.d.ts'))) {
             if (! $this->components->confirm('The [resources/js/shims/env.d.ts] file already exists. Do you want to replace it?')) {
