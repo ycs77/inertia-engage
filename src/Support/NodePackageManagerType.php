@@ -4,9 +4,9 @@ namespace Inertia\Support;
 
 enum NodePackageManagerType: string
 {
-    case npm = 'npm';
+    case NPM = 'npm';
 
-    case yarn = 'yarn';
+    case YARN = 'yarn';
 
-    case pnpm = 'pnpm';
+    case PNPM = 'pnpm';
 }

@@ -109,7 +109,7 @@ class NodePackageManager
      */
     public function useNpm()
     {
-        $this->type = NodePackageManagerType::npm;
+        $this->type = NodePackageManagerType::NPM;
 
         return $this;
     }
@@ -121,7 +121,7 @@ class NodePackageManager
      */
     public function useYarn()
     {
-        $this->type = NodePackageManagerType::yarn;
+        $this->type = NodePackageManagerType::YARN;
 
         return $this;
     }
@@ -133,7 +133,7 @@ class NodePackageManager
      */
     public function usePnpm()
     {
-        $this->type = NodePackageManagerType::pnpm;
+        $this->type = NodePackageManagerType::PNPM;
 
         return $this;
     }
@@ -263,9 +263,9 @@ class NodePackageManager
     {
         $type = $this->guessManagerType();
 
-        if ($type === NodePackageManagerType::yarn) {
+        if ($type === NodePackageManagerType::YARN) {
             $command = 'yarn install';
-        } elseif ($type === NodePackageManagerType::pnpm) {
+        } elseif ($type === NodePackageManagerType::PNPM) {
             $command = 'pnpm install';
         } else {
             $command = 'npm install';
@@ -281,9 +281,9 @@ class NodePackageManager
     {
         $type = $this->guessManagerType();
 
-        if ($type === NodePackageManagerType::yarn) {
+        if ($type === NodePackageManagerType::YARN) {
             $command = 'yarn build';
-        } elseif ($type === NodePackageManagerType::pnpm) {
+        } elseif ($type === NodePackageManagerType::PNPM) {
             $command = 'pnpm run build';
         } else {
             $command = 'npm run build';
@@ -329,6 +329,16 @@ class NodePackageManager
     }
 
     /**
+     * Determine if a lock file exists in the working path.
+     */
+    public function lockFileExists(): bool
+    {
+        return file_exists($this->workingPath.'/package-lock.json')
+            || file_exists($this->workingPath.'/yarn.lock')
+            || file_exists($this->workingPath.'/pnpm-lock.yaml');
+    }
+
+    /**
      * Guess the package manager type based on the working path.
      */
     protected function guessManagerType(): NodePackageManagerType
@@ -336,13 +346,13 @@ class NodePackageManager
         if ($this->type) {
             return $this->type;
         } elseif (file_exists($this->workingPath.'/package-lock.json')) {
-            return NodePackageManagerType::npm;
+            return NodePackageManagerType::NPM;
         } elseif (file_exists($this->workingPath.'/yarn.lock')) {
-            return NodePackageManagerType::yarn;
+            return NodePackageManagerType::YARN;
         } elseif (file_exists($this->workingPath.'/pnpm-lock.yaml')) {
-            return NodePackageManagerType::pnpm;
+            return NodePackageManagerType::PNPM;
         }
 
-        return NodePackageManagerType::yarn;
+        return NodePackageManagerType::NPM;
     }
 }

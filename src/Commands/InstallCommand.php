@@ -8,6 +8,9 @@ use Illuminate\Support\Composer;
 use Illuminate\Support\Facades\Process;
 use Inertia\Support\NodePackageManager;
 
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+
 class InstallCommand extends Command
 {
     /**
@@ -56,6 +59,39 @@ class InstallCommand extends Command
         $this->composer = new Composer(new Filesystem(), $cwd);
 
         $this->npm = $this->createNpm($cwd);
+
+        if (! $this->option('ts')) {
+            collect(multiselect(
+                label: 'Would you like any optional features?',
+                options: [
+                    'ts' => 'TypeScript',
+                ],
+                default: array_filter([
+                    $this->option('ts') ? 'typescript' : null,
+                ]),
+            ))->each(fn ($option) => $this->input->setOption($option, true));
+        }
+
+        if (! $this->option('npm') &&
+            ! $this->option('yarn') &&
+            ! $this->option('pnpm') &&
+            ! $this->npm->lockFileExists()
+        ) {
+            match (select(
+                label: 'Which Node package manager do you want to use?',
+                options: [
+                    'npm' => 'npm',
+                    'yarn' => 'yarn',
+                    'pnpm' => 'pnpm',
+                ],
+                default: 'yarn',
+            )) {
+                'npm' => $this->input->setOption('npm', true),
+                'yarn' => $this->input->setOption('yarn', true),
+                'pnpm' => $this->input->setOption('pnpm', true),
+                default => null,
+            };
+        }
 
         $this->info('    Initialize laravel application');
         $this->updateEditorConfig();
