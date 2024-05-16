@@ -106,7 +106,6 @@ class InstallCommand extends Command
         $this->updateTimezoneConfig();
         $this->updateLocaleConfig();
         $this->clearDefaultJsFiles();
-        $this->publishViteConfig();
 
         $this->components->info('Laravel application initialize successfully.');
 
@@ -118,8 +117,8 @@ class InstallCommand extends Command
 
         $this->components->info('Inertia.js laravel installs successfully.');
 
-        $this->installTypescript();
         $this->installVue();
+        $this->installTypescript();
         $this->installInertiaVue();
         $this->installTailwindCss();
         $this->installNodeDependencies();
@@ -201,25 +200,6 @@ class InstallCommand extends Command
         file_put_contents(base_path('.env'), $env);
 
         $this->components->info('Updated locale config');
-    }
-
-    /**
-     * Publish the Vite configuration file.
-     */
-    protected function publishViteConfig(): void
-    {
-        $js = $this->js;
-
-        if ($this->option('ts') && file_exists(base_path('vite.config.js'))) {
-            @unlink(base_path('vite.config.js'));
-        }
-
-        copy(
-            __DIR__.'/../../stubs/initialize/vite.config.js',
-            base_path("vite.config.$js")
-        );
-
-        $this->components->info('Published vite config');
     }
 
     /**
@@ -374,6 +354,37 @@ class InstallCommand extends Command
     }
 
     /**
+     * Install the Vue package.
+     */
+    protected function installVue(): void
+    {
+        $this->info('    Installing vue');
+
+        $this->npm->addDev('vue', '^3.4.0');
+        $this->npm->addDev('@vitejs/plugin-vue', '^5.0.0');
+
+        $js = $this->js;
+
+        // update vite.config.js
+        if (! $this->option('force') && file_exists(base_path("vite.config.$js"))) {
+            if (! $this->components->confirm("The [vite.config.$js] file already exists. Do you want to replace it?")) {
+                return;
+            }
+        }
+
+        if ($this->option('ts') && file_exists(base_path('vite.config.js'))) {
+            @unlink(base_path('vite.config.js'));
+        }
+
+        copy(
+            __DIR__.'/../../stubs/vue/vite.config.js',
+            base_path("vite.config.$js")
+        );
+
+        $this->components->info('Installed vue successfully.');
+    }
+
+    /**
      * Install the TypeScript package.
      */
     protected function installTypescript(): void
@@ -384,10 +395,15 @@ class InstallCommand extends Command
 
         $this->info('    Installing typescript');
 
+        // install typescript
         $this->npm->addDev('typescript', '~5.4.0');
         $this->npm->addDev('@types/node', '^20.0.0');
         $this->npm->addDev('@tsconfig/node20', '^20.0.0');
+
+        // install typescript for vue
+        $this->npm->addDev('vue-tsc', '^2.0.17');
         $this->npm->addDev('@vue/tsconfig', '^0.5.1');
+        $this->npm->script('type-check', 'vue-tsc --build --force');
 
         $tsconfigs = [
             'tsconfig.json',
@@ -424,39 +440,6 @@ class InstallCommand extends Command
         );
 
         $this->components->info('Installed typescript successfully.');
-    }
-
-    /**
-     * Install the Vue package.
-     */
-    protected function installVue(): void
-    {
-        $this->info('    Installing vue');
-
-        $this->npm->addDev('vue', '^3.4.0');
-        $this->npm->addDev('@vitejs/plugin-vue', '^5.0.0');
-
-        $js = $this->js;
-
-        // update vite.config.js
-        if (! $this->option('force') && file_exists(base_path("vite.config.$js"))) {
-            if (! $this->components->confirm("The [vite.config.$js] file already exists. Do you want to replace it?")) {
-                return;
-            }
-        }
-
-        copy(
-            __DIR__.'/../../stubs/vue/vite.config.js',
-            base_path("vite.config.$js")
-        );
-
-        // install vue-tsc
-        if ($this->option('ts')) {
-            $this->npm->addDev('vue-tsc', '^2.0.17');
-            $this->npm->script('type-check', 'vue-tsc --build --force');
-        }
-
-        $this->components->info('Installed vue successfully.');
     }
 
     /**
