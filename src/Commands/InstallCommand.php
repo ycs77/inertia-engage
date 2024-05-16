@@ -93,6 +93,14 @@ class InstallCommand extends Command
             };
         }
 
+        if ($this->option('npm')) {
+            $this->npm->useNpm();
+        } elseif ($this->option('yarn')) {
+            $this->npm->useYarn();
+        } elseif ($this->option('pnpm')) {
+            $this->npm->usePnpm();
+        }
+
         $this->info('    Initialize laravel application');
         $this->updateEditorConfig();
         $this->updateTimezoneConfig();
@@ -586,14 +594,6 @@ class InstallCommand extends Command
     protected function createNpm(string $workingPath): NodePackageManager
     {
         $npm = new NodePackageManager($workingPath);
-
-        if ($this->option('npm')) {
-            $npm->useNpm();
-        } elseif ($this->option('yarn')) {
-            $npm->useYarn();
-        } elseif ($this->option('pnpm')) {
-            $npm->usePnpm();
-        }
 
         $npm->runningProcessWith(function ($command) use ($workingPath) {
             Process::path($workingPath)
