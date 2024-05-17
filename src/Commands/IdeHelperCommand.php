@@ -26,8 +26,14 @@ class IdeHelperCommand extends Command
      */
     public function handle(): void
     {
-        if (file_exists($file = base_path('_ide_helpers.php')) && ! $this->option('force')) {
+        if (! $this->option('force') && file_exists($file = base_path('_ide_helpers.php'))) {
             if (! $this->components->confirm('The [_ide_helpers.php] file already exists. Do you want to replace it?')) {
+                return;
+            }
+        }
+
+        if (! $this->option('force') && file_exists(base_path('vendor/inertiajs/inertia-laravel/_ide_helpers.php'))) {
+            if (! $this->components->confirm('The [_ide_helpers.php] file already exists in the Inertia package. Do you want to publish it?')) {
                 return;
             }
         }
