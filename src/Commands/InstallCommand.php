@@ -416,7 +416,7 @@ class InstallCommand extends Command
         foreach ($tsconfigs as $tsconfig) {
             if (! $this->option('force') && file_exists(base_path($tsconfig))) {
                 if (! $this->components->confirm("The [$tsconfig] file already exists. Do you want to replace it?")) {
-                    return;
+                    continue;
                 }
             }
 

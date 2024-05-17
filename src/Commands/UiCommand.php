@@ -81,7 +81,7 @@ class UiCommand extends Command
     protected function exportResources(string $type): void
     {
         foreach ($this->resources[$type] as $source => $destination) {
-            if (file_exists($file = base_path($destination)) && ! $this->option('force')) {
+            if (! $this->option('force') && file_exists($file = base_path($destination))) {
                 if (! $this->components->confirm("The [$destination] file already exists. Do you want to replace it?")) {
                     continue;
                 }
