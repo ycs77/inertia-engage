@@ -82,7 +82,7 @@ php artisan inertia:ui pagination --ts
 
 ## IDE Helper
 
-Publish IDE helper file:
+If missing the IDE helper file in the Inertia Laravel package, you can publish the IDE helper file:
 
 ```bash
 php artisan inertia:ide-helper
