@@ -4,7 +4,9 @@ namespace Inertia\Commands;
 
 use Illuminate\Console\Command;
 use InvalidArgumentException;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'inertia:ui')]
 class UiCommand extends Command
 {
     /**

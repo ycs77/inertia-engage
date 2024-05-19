@@ -7,10 +7,12 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 use Illuminate\Support\Facades\Process;
 use Inertia\Support\NodePackageManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
 
+#[AsCommand(name: 'inertia:install')]
 class InstallCommand extends Command
 {
     /**

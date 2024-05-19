@@ -3,7 +3,9 @@
 namespace Inertia\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'inertia:ide-helper')]
 class IdeHelperCommand extends Command
 {
     /**
