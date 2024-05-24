@@ -78,7 +78,6 @@ class Handler
 
             return $response
                 ->with('code', $code)
-                ->with('title', $title)
                 ->with('message', $message)
                 ->toResponse($request)
                 ->setStatusCode($code);
