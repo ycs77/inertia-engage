@@ -12,25 +12,32 @@ use Throwable;
 class Handler
 {
     /**
-     * Returns the error view name.
+     * The error view name.
      *
      * @var string
      */
     protected $errorView = 'Error';
 
     /**
-     * Returns the flash error message key name.
+     * The flash error message key name.
      *
      * @var string
      */
     protected $errorMessageKey = 'error';
 
     /**
-     * Returns the messages transform callback.
+     * The error messages transform callback.
      *
      * @var callable|null
      */
     protected $messagesCallback;
+
+    /**
+     * The error message transform callback.
+     *
+     * @var callable|null
+     */
+    protected $messageCallback;
 
     /**
      * Create a new inertia exception handler instance.
@@ -51,9 +58,9 @@ class Handler
 
         $messages = $this->resolveMessages($e);
 
-        $message = array_key_exists($code, $messages)
-            ? $messages[$code]
-            : $messages[500];
+        $messageContext = $this->resolveMessage($code, $messages, $e);
+        $title = $messageContext['title'];
+        $message = $messageContext['message'];
 
         if (! $request->isMethod('GET') && in_array($code, [419, 429])) {
             return back()
@@ -63,10 +70,15 @@ class Handler
 
         if (! config('app.debug') && array_key_exists($code, $messages)) {
             $response = $this->inertia->render($this->errorView);
-            $response = $this->transformInertiaErrorResponse($response, compact('message'));
+
+            $response = $this->transformInertiaErrorResponse($response, [
+                'title' => $title,
+                'message' => $message,
+            ]);
 
             return $response
                 ->with('code', $code)
+                ->with('title', $title)
                 ->with('message', $message)
                 ->toResponse($request)
                 ->setStatusCode($code);
@@ -104,21 +116,22 @@ class Handler
      *
      * @return array<int, string>
      */
-    protected function messages(Throwable $e): array
+    protected function messages(): array
     {
         return [
             401 => 'Unauthorized',
-            403 => $e->getMessage() ?: 'Forbidden',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
             404 => 'Not Found',
             419 => 'The page expired, please try again.',
-            429 => $e->getMessage() ?: 'Too Many Requests',
+            429 => 'Too Many Requests',
             500 => 'Server Error',
-            503 => $e->getMessage() ?: 'Service Unavailable',
+            503 => 'Service Unavailable',
         ];
     }
 
     /**
-     * Regsiter the messages transform callback.
+     * Regsiter the error messages transform callback.
      *
      * @return $this
      */
@@ -130,13 +143,25 @@ class Handler
     }
 
     /**
-     * Resolve the error message.
+     * Regsiter the error message transform callback.
+     *
+     * @return $this
+     */
+    public function withMessage(callable $callback)
+    {
+        $this->messageCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Resolve the error messages.
      *
      * @return array<int, string>
      */
     protected function resolveMessages(Throwable $e): array
     {
-        $messages = $this->messages($e);
+        $messages = $this->messages();
 
         if ($this->messagesCallback) {
             $messages = call_user_func($this->messagesCallback, $messages, $e);
@@ -146,12 +171,42 @@ class Handler
     }
 
     /**
+     * Resolve the error message.
+     *
+     * @param  array<int, string>  $messages
+     * @return array<string, string>
+     */
+    protected function resolveMessage(int $code, array $messages, Throwable $e): array
+    {
+        if ($code === 403 && $message = $e->getMessage()) {
+            $message = __($message ?? $messages[403]);
+            $title = $messages[403];
+        } elseif (array_key_exists($code, $messages)) {
+            $message = __($messages[$code]);
+            $title = $message;
+        } else {
+            $message = __($messages[500]);
+            $title = $message;
+        }
+
+        if ($this->messageCallback) {
+            $message = call_user_func($this->messageCallback, $message, $code, $e);
+            $title = $message;
+        }
+
+        return [
+            'title' => $title,
+            'message' => $message,
+        ];
+    }
+
+    /**
      * Transform the inertia error response.
      */
     protected function transformInertiaErrorResponse(InertiaResponse $response, array $params = []): InertiaResponse
     {
         if (InertiaResponse::hasMacro('title')) {
-            $response->title($params['message']);
+            $response->title($params['title']);
         }
 
         return $response;
