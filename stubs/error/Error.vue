@@ -17,6 +17,10 @@
 </template>
 
 <script setup>
+defineOptions({
+  inheritAttrs: false,
+})
+
 defineProps({
   code: Number,
   message: String,
