@@ -44,11 +44,13 @@ php artisan inertia:install --ts
 
 ## Error Handler
 
+> If you running the `inertia:install` command, below will automatically added.
+
 Publish the error page:
 
 ```bash
 php artisan inertia:ui error
-# or export with TypeScript
+# export with TypeScript
 php artisan inertia:ui error --ts
 ```
 

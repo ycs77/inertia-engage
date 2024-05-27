@@ -381,7 +381,13 @@ class InstallCommand extends Command
         $js = $this->js;
 
         // update vite.config.js
-        if (! $this->option('force') && file_exists(base_path("vite.config.$js"))) {
+        if (! $this->option('force') &&
+            file_exists(base_path("vite.config.$js")) &&
+            ! str_contains(file_get_contents(base_path("vite.config.$js")), 'laravel') && (
+                str_contains(file_get_contents(base_path("vite.config.$js")), 'vue') ||
+                str_contains(file_get_contents(base_path("vite.config.$js")), 'Vue')
+            )
+        ) {
             if (! $this->components->confirm("The [vite.config.$js] file already exists. Do you want to replace it?")) {
                 return;
             }
@@ -472,12 +478,6 @@ class InstallCommand extends Command
         $js = $this->js;
 
         // copy app.js
-        if (! $this->option('force') && file_exists(resource_path("js/app.$js"))) {
-            if (! $this->components->confirm("The [resources/js/app.$js] file already exists. Do you want to replace it?")) {
-                return;
-            }
-        }
-
         if ($this->option('ts') && file_exists(resource_path('js/app.js'))) {
             @unlink(resource_path('js/app.js'));
         }
@@ -518,6 +518,11 @@ class InstallCommand extends Command
             __DIR__.'/../../stubs/vue/pages/Home.vue',
             resource_path('js/pages/Home.vue')
         );
+
+        $this->call('inertia:ui', [
+            'type' => 'error',
+            '--ts' => $this->option('ts'),
+        ]);
 
         $this->components->info('Installed inertia.js for vue.');
     }
