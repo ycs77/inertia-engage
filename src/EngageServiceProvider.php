@@ -4,9 +4,9 @@ namespace Inertia;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\ServiceProvider;
-use Inertia\Commands\IdeHelperCommand;
-use Inertia\Commands\InstallCommand;
-use Inertia\Commands\UiCommand;
+use Inertia\Console\IdeHelperCommand;
+use Inertia\Console\InstallCommand;
+use Inertia\Console\UiCommand;
 use Inertia\Exceptions\Handler as ExceptionHandler;
 use Inertia\Pagination\Paginator;
 

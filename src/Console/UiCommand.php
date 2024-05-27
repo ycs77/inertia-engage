@@ -1,6 +1,6 @@
 <?php
 
-namespace Inertia\Commands;
+namespace Inertia\Console;
 
 use Illuminate\Console\Command;
 use InvalidArgumentException;
