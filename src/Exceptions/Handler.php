@@ -3,6 +3,7 @@
 namespace Inertia\Exceptions;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Response as InertiaResponse;
 use Inertia\ResponseFactory;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -54,6 +55,10 @@ class Handler
      */
     public function handle(Request $request, SymfonyResponse $response, Throwable $e): SymfonyResponse
     {
+        if ($e instanceof ValidationException && $e->status === 422) {
+            return $response;
+        }
+
         $code = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
 
         $messages = $this->resolveMessages($e);
@@ -63,9 +68,7 @@ class Handler
         $message = $messageContext['message'];
 
         if (! $request->isMethod('GET') && in_array($code, [419, 429])) {
-            return back()
-                ->setStatusCode($code)
-                ->with($this->errorMessageKey, $message);
+            return back()->with($this->errorMessageKey, $message);
         }
 
         if (! config('app.debug') && array_key_exists($code, $messages)) {
