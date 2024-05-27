@@ -301,6 +301,17 @@ class InstallCommand extends Command
 
         file_put_contents(base_path('bootstrap/app.php'), $bootatrapApp);
 
+        // update inertia middleware
+        $middleware = file_get_contents(app_path('Http/Middleware/HandleInertiaRequests.php'));
+
+        $middleware = str_replace(
+            "array_merge(parent::share(\$request), [\n            //",
+            "array_merge(parent::share(\$request), [\n            'flash' => fn () => [\n                'success' => session('success'),\n                'error' => session('error'),\n            ],",
+            $middleware
+        );
+
+        file_put_contents(app_path('Http/Middleware/HandleInertiaRequests.php'), $middleware);
+
         $this->components->info('Imported inertia middleware');
     }
 
@@ -409,13 +420,11 @@ class InstallCommand extends Command
         $this->npm->addDev('@vue/tsconfig', '^0.5.1');
         $this->npm->script('type-check', 'vue-tsc --build --force');
 
-        $tsconfigs = [
+        foreach ([
             'tsconfig.json',
             'tsconfig.app.json',
             'tsconfig.node.json',
-        ];
-
-        foreach ($tsconfigs as $tsconfig) {
+        ] as $tsconfig) {
             if (! $this->option('force') && file_exists(base_path($tsconfig))) {
                 if (! $this->components->confirm("The [$tsconfig] file already exists. Do you want to replace it?")) {
                     continue;
@@ -428,20 +437,25 @@ class InstallCommand extends Command
             );
         }
 
-        if (! $this->option('force') && file_exists(resource_path('js/shims/env.d.ts'))) {
-            if (! $this->components->confirm('The [resources/js/shims/env.d.ts] file already exists. Do you want to replace it?')) {
-                return;
-            }
-        }
-
         if (! is_dir($directory = resource_path('js/shims'))) {
             mkdir($directory, 0755, true);
         }
 
-        copy(
-            __DIR__.'/../../stubs/typescript/shims/env.d.ts',
-            resource_path('js/shims/env.d.ts')
-        );
+        foreach ([
+            'env.d.ts',
+            'inertia.d.ts',
+        ] as $dts) {
+            if (! $this->option('force') && file_exists(resource_path("js/shims/$dts"))) {
+                if (! $this->components->confirm("The [resources/js/shims/$dts] file already exists. Do you want to replace it?")) {
+                    continue;
+                }
+            }
+
+            copy(
+                __DIR__."/../../stubs/typescript/shims/$dts",
+                resource_path("js/shims/$dts")
+            );
+        }
 
         $this->components->info('Installed typescript successfully.');
     }

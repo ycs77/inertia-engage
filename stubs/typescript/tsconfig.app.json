@@ -12,6 +12,7 @@
     "resources/js/shims/env.d.ts",
     "resources/js/shims/components.d.ts",
     "resources/js/shims/auto-imports.d.ts",
+    "resources/js/shims/inertia.d.ts",
     "resources/js/**/*",
     "resources/js/**/*.vue"
   ]
