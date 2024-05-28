@@ -19,15 +19,26 @@
         "symfony/console": "^7.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.13"
+        "laravel/pint": "^1.13",
+        "orchestra/testbench": ">=9.0",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.4"
     },
     "autoload": {
         "psr-4": {
             "Inertia\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Inertia\\Engage\\Tests\\": "tests"
+        }
+    },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

@@ -125,8 +125,6 @@ class Handler
     protected function messages(): array
     {
         return [
-            401 => 'Unauthorized',
-            402 => 'Payment Required',
             403 => 'Forbidden',
             404 => 'Not Found',
             419 => 'The page expired, please try again.',
