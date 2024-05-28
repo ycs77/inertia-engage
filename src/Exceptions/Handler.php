@@ -59,7 +59,11 @@ class Handler
             return $response;
         }
 
-        $code = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
+        if ($e instanceof HttpExceptionInterface) {
+            $code = $e->getStatusCode();
+        } else {
+            $code = $response->getStatusCode();
+        }
 
         $messages = $this->resolveMessages($e);
 
