@@ -27,6 +27,14 @@ trait HasInitializeLaravelApp
             );
         }
 
+        if (str_contains($editorConfig, '[docker-compose.yml]')) {
+            $editorConfig = str_replace(
+                "\n[docker-compose.yml]\nindent_size = 4\n",
+                '',
+                $editorConfig
+            );
+        }
+
         file_put_contents(base_path('.editorconfig'), $editorConfig);
 
         $this->components->info('Updated .editorconfig');
