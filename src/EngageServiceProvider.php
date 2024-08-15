@@ -6,6 +6,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Console\IdeHelperCommand;
 use Inertia\Console\InstallCommand;
+use Inertia\Console\LaravelInitialCommand;
 use Inertia\Console\UiCommand;
 use Inertia\Exceptions\Handler as ExceptionHandler;
 use Inertia\Pagination\Paginator;
@@ -45,6 +46,7 @@ class EngageServiceProvider extends ServiceProvider
             $this->commands([
                 IdeHelperCommand::class,
                 InstallCommand::class,
+                LaravelInitialCommand::class,
                 UiCommand::class,
             ]);
         }

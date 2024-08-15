@@ -42,6 +42,12 @@ php artisan inertia:install
 php artisan inertia:install --ts
 ```
 
+Or just initialize the Laravel project:
+
+```bash
+php artisan laravel:initial
+```
+
 ## Error Handler
 
 > If you running the `inertia:install` command, below will automatically added.
