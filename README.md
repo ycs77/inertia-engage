@@ -16,9 +16,9 @@ Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended
 
 ## Supported Versions
 
-| Version                                                 | Laravel Version |
-| ------------------------------------------------------- | --------------- |
-| [1.x](https://github.com/ycs77/inertia-engage/tree/1.x) | 11.x            |
+| Version | Laravel Version |
+| ------- | --------------- |
+| 1.x     | 11.x            |
 
 ## Installation
 
