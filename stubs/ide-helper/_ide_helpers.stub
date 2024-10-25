@@ -78,3 +78,16 @@ namespace Illuminate\Routing {
         //
     }
 }
+
+namespace Inertia {
+
+    /**
+     * @method static \Inertia\Exceptions\Handler exception()
+     *
+     * @see \Inertia\Exceptions\Handler
+     */
+    class Inertia
+    {
+        //
+    }
+}
