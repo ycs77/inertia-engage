@@ -288,6 +288,7 @@ class InstallCommand extends Command
     {
         $this->info('    Installing vue');
 
+        $this->npm->addDev('vite', '^6.0.0');
         $this->npm->addDev('vue', '^3.5.0');
         $this->npm->addDev('@vitejs/plugin-vue', '^5.2.0');
 
