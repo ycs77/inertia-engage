@@ -61,7 +61,7 @@ class InstallCommand extends Command
 
         $this->js = $this->option('ts') ? 'ts' : 'js';
 
-        $this->composer = new Composer(new Filesystem(), $cwd);
+        $this->composer = new Composer(new Filesystem, $cwd);
 
         $this->npm = $this->createNpm($cwd);
 
@@ -149,7 +149,7 @@ class InstallCommand extends Command
         $this->info('    Installing inertiajs/inertia-laravel package');
 
         $this->runProcessCommand(
-            $this->findComposer().' require inertiajs/inertia-laravel',
+            $this->findComposer().' require inertiajs/inertia-laravel:^2.0',
             workingPath: base_path()
         );
 
@@ -387,7 +387,7 @@ class InstallCommand extends Command
     {
         $this->info('    Installing @inertiajs/vue3');
 
-        $this->npm->addDev('@inertiajs/vue3', '^1.0.15');
+        $this->npm->addDev('@inertiajs/vue3', '^2.0.0');
 
         $js = $this->js;
 
