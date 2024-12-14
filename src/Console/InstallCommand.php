@@ -288,8 +288,8 @@ class InstallCommand extends Command
     {
         $this->info('    Installing vue');
 
-        $this->npm->addDev('vue', '^3.4.0');
-        $this->npm->addDev('@vitejs/plugin-vue', '^5.0.0');
+        $this->npm->addDev('vue', '^3.5.0');
+        $this->npm->addDev('@vitejs/plugin-vue', '^5.2.0');
 
         $js = $this->js;
 
@@ -330,14 +330,14 @@ class InstallCommand extends Command
         $this->info('    Installing typescript');
 
         // install typescript
-        $this->npm->addDev('typescript', '~5.4.0');
+        $this->npm->addDev('typescript', '~5.6.3');
         $this->npm->addDev('@types/node', '^20.0.0');
         $this->npm->addDev('@tsconfig/node20', '^20.0.0');
 
         // install typescript for vue
-        $this->npm->addDev('vue-tsc', '^2.0.17');
-        $this->npm->addDev('@vue/tsconfig', '^0.5.1');
-        $this->npm->script('type-check', 'vue-tsc --build --force');
+        $this->npm->addDev('vue-tsc', '^2.1.10');
+        $this->npm->addDev('@vue/tsconfig', '^0.7.0');
+        $this->npm->script('type-check', 'vue-tsc --build');
 
         foreach ([
             'tsconfig.json',
