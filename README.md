@@ -42,7 +42,7 @@ php artisan inertia:install
 php artisan inertia:install --ts
 ```
 
-Or just initialize the Laravel project:
+Or just initialize the Laravel application:
 
 ```bash
 php artisan laravel:initial
