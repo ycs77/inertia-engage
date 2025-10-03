@@ -27,9 +27,9 @@ trait HasInitializeLaravelApp
             );
         }
 
-        if (str_contains($editorConfig, '[docker-compose.yml]')) {
+        if (str_contains($editorConfig, '[compose.yaml]')) {
             $editorConfig = str_replace(
-                "\n[docker-compose.yml]\nindent_size = 4\n",
+                "\n[compose.yaml]\nindent_size = 4\n",
                 '',
                 $editorConfig
             );
@@ -45,16 +45,10 @@ trait HasInitializeLaravelApp
      */
     protected function updateTimezoneConfig(): void
     {
-        file_put_contents(base_path('.env.example'), str_replace(
-            'APP_TIMEZONE=UTC',
-            'APP_TIMEZONE=Asia/Taipei',
-            file_get_contents(base_path('.env.example'))
-        ));
-
-        file_put_contents(base_path('.env'), str_replace(
-            'APP_TIMEZONE=UTC',
-            'APP_TIMEZONE=Asia/Taipei',
-            file_get_contents(base_path('.env'))
+        file_put_contents(base_path('config/app.php'), str_replace(
+            "'timezone' => 'UTC',",
+            "'timezone' => 'Asia/Taipei',",
+            file_get_contents(base_path('config/app.php'))
         ));
 
         $this->components->info('Updated timezone config');

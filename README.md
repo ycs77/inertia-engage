@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
+[![GitHub Tests Action Status][ico-github-action]][link-github-action]
 [![Style CI Build Status][ico-style-ci]][link-style-ci]
 [![Total Downloads][ico-downloads]][link-downloads]
 
@@ -19,6 +20,7 @@ Opinionated Inertia.js Laravel & Vue helper library, to scaffolding and extended
 | Version | Laravel Version |
 | ------- | --------------- |
 | 1.x     | 11.x            |
+| 2.x     | 12.x            |
 
 ## Installation
 
@@ -102,9 +104,11 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/ycs77/inertia-engage?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square
+[ico-github-action]: https://img.shields.io/github/actions/workflow/status/ycs77/inertia-engage/tests.yml?branch=2.x&label=tests&style=flat-square
 [ico-style-ci]: https://github.styleci.io/repos/800696246/shield?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/ycs77/inertia-engage?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/ycs77/inertia-engage
+[link-github-action]: https://github.com/ycs77/inertia-engage/actions/workflows/tests.yml?query=branch%3A2.x
 [link-style-ci]: https://github.styleci.io/repos/800696246
 [link-downloads]: https://packagist.org/packages/ycs77/inertia-engage
